@@ -84,7 +84,9 @@ jobs:
                 sleep 2
             done
             docker-compose run --rm s3-init
-            docker-compose run --rm uc-historic-data-importer
+            if docker-compose run --rm uc-historic-data-importer; then
+              docker-compose run --rm integration-test
+            fi
 
 
 

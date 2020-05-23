@@ -44,7 +44,7 @@ services:
       ZOOKEEPER_QUORUM: zookeeper
 
   s3:
-    image: localstack/localstack:0.11.1
+    image: localstack/localstack
     ports:
       - '4563-4584:4563-4584'
       - '8055:8080'
