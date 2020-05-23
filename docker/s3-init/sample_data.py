@@ -39,25 +39,23 @@ def main():
     batch_nos = {}
     file_count = int(args.file_count if args.file_count else 10)
 
-    dks_response = requests.get(data_key_service).json()
+    for i in range(file_count):
+        generate_dump_file(args, batch_nos, data_key_service, i)
 
+    if args.coalesced:
+        generate_dump_file(args, batch_nos, data_key_service, file_count + 1, "collection-thirtyone")
+
+
+def generate_dump_file(args, batch_nos, data_key_service, i, collectionOverride=""):
+    dks_response = requests.get(data_key_service).json()
     encryption_metadata = {
         'keyEncryptionKeyId': dks_response['dataKeyEncryptionKeyId'],
         'encryptedEncryptionKey': dks_response['ciphertextDataKey'],
         'plaintextDatakey': dks_response['plaintextDataKey']
     }
-    print(encryption_metadata)
-    for i in range(file_count):
-        generate_dump_file(args, batch_nos, encryption_metadata, i)
-
-    if args.coalesced:
-        generate_dump_file(args, batch_nos, encryption_metadata, file_count + 1, "collection-thirtyone")
-
-
-def generate_dump_file(args, batch_nos, encryption_metadata, i, collection_override=""):
     contents = ""
     database = f'database-{(i // 4) + 1}'
-    collection = collection_override if collection_override != "" else f'collection-{(i // 2) + 1}'
+    collection = collectionOverride if collectionOverride != "" else f'collection-{(i // 2) + 1}'
     batch = f'{database}.{collection}'
     batch_nos[batch] = batch_nos.get(batch, 0) + 1
     record_count = int(args.batch_size if args.batch_size else 10)
