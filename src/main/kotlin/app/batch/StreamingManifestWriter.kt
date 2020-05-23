@@ -22,15 +22,21 @@ open class StreamingManifestWriter {
                     val manifestFileMetadata = manifestMetadata(manifestFileName, manifestSize)
                     val prefix = "$manifestPrefix/$manifestFileName"
 
-                    FileInputStream(manifestFile).use { inputStream ->
-                        val request = PutObjectRequest(manifestBucket, prefix, inputStream, manifestFileMetadata)
-                        s3.putObject(request)
-                        logger.info("Written manifest", "attempt_number", "${attempts + 1}", "manifest_size", "$manifestSize", "s3_location", "s3://$manifestBucket/$manifestPrefix/$manifestFileName")
-                        success = true
-                        val deleted = manifestFile.delete()
-                        logger.info("Deleted manifest", "succeeded", "${deleted}", "manifest_file", "$manifestFile")
-                        return
-                    }
+                    s3.putObject(manifestBucket, manifestPrefix, manifestFile)
+                    logger.info("Written manifest", "attempt_number", "${attempts + 1}", "manifest_size", "$manifestSize", "s3_location", "s3://$manifestBucket/$manifestPrefix/$manifestFileName")
+                    success = true
+                    val deleted = manifestFile.delete()
+                    logger.info("Deleted manifest", "succeeded", "${deleted}", "manifest_file", "$manifestFile")
+                    return
+//                    FileInputStream(manifestFile).use { inputStream ->
+//                        val request = PutObjectRequest(manifestBucket, prefix, inputStream, manifestFileMetadata)
+//                        s3.putObject(request)
+//                        logger.info("Written manifest", "attempt_number", "${attempts + 1}", "manifest_size", "$manifestSize", "s3_location", "s3://$manifestBucket/$manifestPrefix/$manifestFileName")
+//                        success = true
+//                        val deleted = manifestFile.delete()
+//                        logger.info("Deleted manifest", "succeeded", "${deleted}", "manifest_file", "$manifestFile")
+//                        return
+//                    }
                 }
                 else {
                     logger.info("Skipped zero-byte manifest", "manifest_size", "$manifestSize", "manifest_file_name", manifestFileName)

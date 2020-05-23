@@ -64,7 +64,7 @@ class HBaseWriter : ItemWriter<DecompressedStream> {
     @Value("\${max.stream.attempts:10}")
     private lateinit var maxStreamAttempts: String
 
-    @Value("\${run-mode:import}")
+    @Value("\${run-mode:import-and-manifest}")
     private lateinit var runMode: String
 
     @Value("\${s3.manifest.prefix.folder}")
