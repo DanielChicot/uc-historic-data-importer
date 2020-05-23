@@ -54,10 +54,10 @@ def main():
         generate_dump_file(args, batch_nos, encryption_metadata, file_count + 1, "collection-thirtyone")
 
 
-def generate_dump_file(args, batch_nos, encryption_metadata, i, collectionOverride=""):
+def generate_dump_file(args, batch_nos, encryption_metadata, i, collection_override=""):
     contents = ""
     database = f'database-{(i // 4) + 1}'
-    collection = collectionOverride if collectionOverride != "" else f'collection-{(i // 2) + 1}'
+    collection = collection_override if collection_override != "" else f'collection-{(i // 2) + 1}'
     batch = f'{database}.{collection}'
     batch_nos[batch] = batch_nos.get(batch, 0) + 1
     record_count = int(args.batch_size if args.batch_size else 10)
