@@ -69,7 +69,7 @@ jobs:
             echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-5.5.1-bin.zip' >> tmp.txt
             mv tmp.txt gradle/wrapper/gradle-wrapper.properties
             cat gradle/wrapper/gradle-wrapper.properties
-            ./gradlew build
+            ./gradlew build -x test
             cd docker/java && docker build --tag dwp-java:latest . && cd -
             cd docker/python && docker build --tag dwp-python:latest . && cd -
             cp settings.gradle.kts gradle.properties docker/gradle
