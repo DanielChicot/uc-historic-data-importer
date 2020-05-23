@@ -40,5 +40,6 @@ else
             aws_s3 cp $file s3://${S3_BUCKET}/${S3_PREFIX}
         done
         aws_s3 ls $S3_BUCKET/$S3_PREFIX
+        ls -l
     fi
 fi

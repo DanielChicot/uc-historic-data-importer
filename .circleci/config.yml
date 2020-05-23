@@ -84,11 +84,7 @@ jobs:
                 sleep 2
             done
             docker-compose run --rm s3-init
-
-            while ! docker-compose run --rm uc-historic-data-importer; do
-              echo uc-historic-data-importer non-zero exit: $?, trying again >&2
-              docker-compose run --rm s3-init
-            done
+            docker-compose run --rm uc-historic-data-importer
 
 
 
