@@ -75,7 +75,7 @@ jobs:
             cp settings.gradle.kts gradle.properties docker/gradle
             cd docker/gradle && docker build --tag dwp-gradle:latest . && cd -
 
-            docker-compose build
+            docker-compose build --no-cache
             docker-compose up -d hbase s3 dks-standalone-http dks-standalone-https
 
             S3_READY_REGEX=^Ready\.$
