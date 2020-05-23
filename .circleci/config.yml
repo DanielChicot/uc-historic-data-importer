@@ -30,7 +30,7 @@ jobs:
       - run:
           name: run gradle
           command: |
-            gradle build
+            gradle build -x test
 
 
       - save_cache:
