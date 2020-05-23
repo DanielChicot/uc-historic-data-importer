@@ -84,27 +84,31 @@ jobs:
                 sleep 2
             done
             docker-compose up s3-init
-            docker-compose up uc-historic-data-importer
+
+            while ! docker-compose up --exit-code-from uc-historic-data-importer uc-historic-data-importer; do
+              echo uc-historic-data-importer non-zero exit: $?, trying again >&2
+            done
+
             docker-compose up integration-test
 
 
-  publish-github-release:
-    docker:
-      - image: cibuilds/github:0.10
-    steps:
-      - attach_workspace:
-          at: ./artifacts
-      - run:
-          name: "Publish Release on GitHub"
-          command: |
-            set -u
-            set -o pipefail
-            ghr \
-              -t ${GITHUB_TOKEN} \
-              -u ${CIRCLE_PROJECT_USERNAME} \
-              -r ${CIRCLE_PROJECT_REPONAME} \
-              -c ${CIRCLE_SHA1} -delete \
-              0.0.1 ./artifacts/
+#  publish-github-release:
+#    docker:
+#      - image: cibuilds/github:0.10
+#    steps:
+#      - attach_workspace:
+#          at: ./artifacts
+#      - run:
+#          name: "Publish Release on GitHub"
+#          command: |
+#            set -u
+#            set -o pipefail
+#            ghr \
+#              -t ${GITHUB_TOKEN} \
+#              -u ${CIRCLE_PROJECT_USERNAME} \
+#              -r ${CIRCLE_PROJECT_REPONAME} \
+#              -c ${CIRCLE_SHA1} -delete \
+#              0.0.1 ./artifacts/
 
 workflows:
   version: 2
@@ -114,9 +118,9 @@ workflows:
       - integration-test:
           requires:
             - build
-      - publish-github-release:
-          requires:
-            - integration-test
-          filters:
-            branches:
-              only: master
+#      - publish-github-release:
+#          requires:
+#            - integration-test
+#          filters:
+#            branches:
+#              only: master
